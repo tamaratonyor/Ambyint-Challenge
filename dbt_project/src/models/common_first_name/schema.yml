@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: common_first_name
+    description: "Model reveals the most common first name amongst actors and actresses"
+    columns:
+      - name: first_name
+        description: "First Name of Actor"
+        tests:
+          - not_null
+      - name: actor
+        description: "Actor Full Name"
+        tests:
+          - not_null
+      - name: appearances
+        description: "Number of Appearances"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
