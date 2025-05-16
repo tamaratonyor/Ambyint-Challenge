@@ -14,7 +14,8 @@ Stage 1:
 netflix_titles.csv is read into a table via dbt seeds
 
 Stage 2:
-Desired Snowflake object outputs are created by seeds, automation is done by cron job which is added to the cron directory once the setup.sh script is run. Other orchestration tools are better but this makes local testing easier
+Desired Snowflake object outputs are created by seeds, automation can be done by cron job, run 
+./setup.sh on aperiodic basis. Other orchestration tools are better but this makes local testing easier.
 
 Stage 3:
 Python script is script.py

@@ -8,10 +8,6 @@ models:
         description: "First Name of Actor"
         tests:
           - not_null
-      - name: actor
-        description: "Actor Full Name"
-        tests:
-          - not_null
       - name: appearances
         description: "Number of Appearances"
         tests:
