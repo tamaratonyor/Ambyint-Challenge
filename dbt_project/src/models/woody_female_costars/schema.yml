@@ -2,13 +2,13 @@ version: 2
 
 models:
   - name: woody_female_costars
-    description: "Model reveals the actress with most appearances with Woody Harrelson"
+    description: "Model reveals the actress with more than 1 appearances with Woody Harrelson"
     columns:
-      - name: actress_name
-        description: "Name of actress"
+      - name: actor
+        description: "Name of actor"
         tests:
           - not_null
-      - name: number_of_appearances
+      - name: appearances_with_woody
         description: "Number of Appearances with Woody Harrelson"
         tests:
           - not_null
