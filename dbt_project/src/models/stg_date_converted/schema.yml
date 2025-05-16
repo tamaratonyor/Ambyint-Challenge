@@ -1,0 +1,35 @@
+#version: 2
+models:
+  - name: stg_date_converted
+    description: "Table with the date type converted"
+    columns:
+      - name: show_id
+        description: "Show ID For the movie of TV program"
+        tests:
+          - unique
+          - not_null
+      - name: type
+        description: "Program Type"
+        tests:
+          - accepted_values:
+              values: ['TV Show', 'Movie']
+      - name: title
+        description: "Title of the program"
+      - name: director
+        description: "Name of the director"
+      - name: cast_name
+        description: "Cast of the program"
+      - name: country
+        description: "Country of origin of the program"
+      - name: parsed_date_added
+        description: "Parsed date the program was added to the platform"
+      - name: release_year
+        description: "Year the program was released"
+      - name: rating
+        description: "Rating the program received"
+      - name: duration
+        description: "Duration of the program"
+      - name: listed_in
+        description: "Film category the program is listed in"
+      - name: description
+        description: "Description of the program"

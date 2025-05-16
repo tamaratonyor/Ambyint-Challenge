@@ -17,4 +17,4 @@ SELECT
 FROM filtered_names
 GROUP BY first_name
 ORDER BY appearances DESC
-LIMIT 1;
+LIMIT 1

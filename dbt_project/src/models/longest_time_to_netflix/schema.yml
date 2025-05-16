@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: longest_time_to_netflix
+    description: "Model reveals the release with the longest time to Netflix release"
+    columns:
+      - name: show_id
+        description: "ID of the Program"
+        tests:
+          - not_null
+      - name: title
+        description: "Name of the Program"
+      - name: time_to_release
+        description: "Number of days to release on Netflix"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
