@@ -1,6 +1,5 @@
 import csv
 import random
-import os
 from faker import Faker
 from datetime import datetime
 
@@ -45,23 +44,19 @@ def generate_entry(index):
         release_year, rating, duration, listed_in, description
     ]
 
-# File path
-file_path = 'netflix_titles.csv'
+# Use today's date to name the file
+today_str = datetime.now().strftime('%Y-%m-%d')
+file_name = f"dbt_project/src/tests/netflix_titles_{today_str}.csv"
 
-# Determine whether to write headers
-write_header = not os.path.exists(file_path)
-
-# Append entries
-with open(file_path, mode='a', newline='', encoding='utf-8') as file:
+# Write CSV with header
+with open(file_name, mode='w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
-    if write_header:
-        writer.writerow([
-            'show_id', 'type', 'title', 'director', 'cast', 'country',
-            'date_added', 'release_year', 'rating', 'duration',
-            'listed_in', 'description'
-        ])
-    start_index = sum(1 for _ in open(file_path)) if not write_header else 1
-    for i in range(start_index, start_index + 100):  # append 100 rows
+    writer.writerow([
+        'show_id', 'type', 'title', 'director', 'cast', 'country',
+        'date_added', 'release_year', 'rating', 'duration',
+        'listed_in', 'description'
+    ])
+    for i in range(1, 101):  # generate 100 rows
         writer.writerow(generate_entry(i))
 
-print("100 new rows appended to 'netflix_titles.csv'.")
+print(f"CSV file '{file_name}' generated successfully.")
