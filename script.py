@@ -2,6 +2,9 @@ import csv
 import random
 from faker import Faker
 from datetime import datetime
+import snowflake.connector
+from snowflake.connector.errors import Error as SnowflakeError
+import os
 
 fake = Faker()
 
@@ -15,6 +18,14 @@ genres = [
     "Action & Adventure", "Documentaries", "International TV Shows"
 ]
 countries = ['United States', 'Brazil', 'Mexico', 'Singapore', 'Canada', 'India', 'France']
+config = {
+        'user': os.environ['SF_USER'],
+        'password': os.environ['SF_PASSWORD'],
+        'account': os.environ['SF_ACCOUNT'],
+        'warehouse': os.environ['SF_WAREHOUSE'],
+        'database': os.environ['SF_DATABASE'],
+        'schema': os.environ['SF_SCHEMA'],
+}
 
 def generate_cast():
     return ', '.join([fake.name() for _ in range(random.randint(4, 8))])
@@ -25,8 +36,35 @@ def generate_director():
 def generate_description():
     return fake.sentence(nb_words=20)
 
-def generate_entry(index):
-    show_id = f"s{index}"
+def get_max_show_id():
+    try:
+        print("Connecting...")
+        conn = snowflake.connector.connect(**config)
+
+        conn.cursor().execute(f"USE DATABASE {config['database']}")
+        conn.cursor().execute(f"USE SCHEMA {config['schema']}")
+
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT MAX(TO_NUMBER(REGEXP_SUBSTR(show_id, '[1-9][0-9]*'))) AS max_show_id
+                FROM NETFLIX_TITLES;
+            """)
+            result = cursor.fetchone()
+            if result and result[0] is not None:
+                return int(result[0])
+            else:
+                print("⚠️ No matching show_id values found.")
+
+    except SnowflakeError as e:
+        print("❌ Snowflake error:", e)
+    except Exception as e:
+        print("❌ General error:", e)
+    finally:
+        if conn:
+            conn.close()
+
+def generate_entry(show_id):
+    show_id = f"s{show_id}"
     type_ = random.choice(show_types)
     title = fake.word().capitalize() + (":" + str(random.randint(1, 99)) if random.random() < 0.2 else '')
     director = generate_director()
@@ -45,8 +83,8 @@ def generate_entry(index):
     ]
 
 # Use today's date to name the file
-today_str = datetime.now().strftime('%Y-%m-%d')
-file_name = f"dbt_project/src/tests/netflix_titles_{today_str}.csv"
+today_str = datetime.now().strftime('%Y_%m_%d')
+file_name = f"dbt_project/src/seeds/netflix_titles_{today_str}.csv"
 
 # Write CSV with header
 with open(file_name, mode='w', newline='', encoding='utf-8') as file:
@@ -56,7 +94,9 @@ with open(file_name, mode='w', newline='', encoding='utf-8') as file:
         'date_added', 'release_year', 'rating', 'duration',
         'listed_in', 'description'
     ])
+    max_show_id = get_max_show_id()
     for i in range(1, 101):  # generate 100 rows
-        writer.writerow(generate_entry(i))
+        writer.writerow(generate_entry(show_id=max_show_id + 1))
+        max_show_id+=1
 
 print(f"CSV file '{file_name}' generated successfully.")
