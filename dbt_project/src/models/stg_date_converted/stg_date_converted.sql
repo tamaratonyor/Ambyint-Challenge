@@ -12,3 +12,4 @@ SELECT
   listed_in,
   description
 FROM {{ ref('raw_merged') }}
+WHERE date_added IS NOT NULL
