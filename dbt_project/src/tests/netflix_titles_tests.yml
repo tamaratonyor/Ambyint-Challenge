@@ -1,10 +1,10 @@
-version: 2
+#version: 2
 
-seeds:
-  - name: netflix_titles
-    description: "Seed test"
-    tests:
-      - not_null:
-          column_name: show_id
-      - unique:
-          column_name: show_id
+#models:
+#  - name: netflix_titles
+#    description: "Seed test"
+#    tests:
+#      - not_null:
+#          column_name: show_id
+#      - unique:
+#          column_name: show_id

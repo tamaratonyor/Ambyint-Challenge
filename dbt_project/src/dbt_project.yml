@@ -16,7 +16,8 @@ models:
       +materialized: table
 
 seeds:
-  src: 
+  src:
+    +full_refresh: true 
     netflix_titles:
       column_types:
         show_id: string
