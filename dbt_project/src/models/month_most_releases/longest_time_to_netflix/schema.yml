@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: month_most_releases
+    description: "Model reveals the month with the most releases historically"
+    columns:
+      - name: month_number
+        description: "Month of release Number"
+        tests:
+          - not_null
+      - name: month_name
+        description: "Month of release"
+        tests:
+          - not_null
+      - name: number_of_releases
+        description: "Number of Netflix Releases"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
